@@ -3,7 +3,7 @@
 ## Goals
 1. Learn more about serverless architecture
 2. Become more fluent in CSharp .net core
-3. Build a website that I can continuously build upon and showcase learing and random musings.
+3. Build a website that I can continuously build upon and showcase learning and random musings.
 
 ## Tech-stack
 - [dotnet core](https://dotnet.microsoft.com/)
