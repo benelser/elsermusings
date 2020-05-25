@@ -12,7 +12,11 @@
 - [AWS Lambda](https://docs.aws.amazon.com/lambda/index.html)
 - [AWS dynamodb](https://docs.aws.amazon.com/dynamodb/)
 - [AWS S3](https://docs.aws.amazon.com/s3/index.html)
+- [AWS Identity and Access Management (IAM)](https://aws.amazon.com/iam/)
 - [CSharp](https://docs.microsoft.com/en-us/dotnet/csharp/)
+
+## Docs
+- [AWS SDK API](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/)
 
 ## Build Steps (not-automated) 
 *These steps are specific to getting things up and running in a WSL ubuntu env*
@@ -77,4 +81,33 @@ The newly compiled WASM app is somewhere under
 We want to copy all contents from wwwroot to our static hosting S3 bucket setting their acl permissions to public-read
 ```bash
 aws s3 cp --recursive --acl public-read wwwroot s3://elsermusings 
+```
+8. Create first lambda function
+Install templates and tools
+```bash
+dotnet new -i Amazon.Lambda.Templates
+dotnet tool install -g Amazon.Lambda.Tools
+sudo apt-get install zip # Needed for deployment
+```
+Edit profile path
+```bash
+nano ~/.bash_profile
+# add the following line
+export PATH="$PATH:/home/bjelser/.dotnet/tools"
+# Saave file
+source ~/.bash_profile # update profile
+```
+```bash
+dotnet new lambda.EmptyFunction --name fetchweatherdata
+```
+9. Create lambda role
+These roles are used to give AWS services internal access to each other. We need to create a role that we’ll assign to our Lambda functions. In production think least-privilaged.
+
+10. Deploy first lambda function
+```bash
+dotnet lambda deploy-function fetchweatherdata --function-role lambda --region us-east-1
+```
+11. Test first lambda function
+```bash
+dotnet lambda invoke-function fetchweatherdata --payload "Just Checking If Everything is OK" --region us-east-1
 ```
