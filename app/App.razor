@@ -3,8 +3,9 @@
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
     <NotFound>
+        @* This is a hack until I can figure out why css is not sticking when s3 bucket presents entry point *@
         <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
+        <app.Pages.Index />
+        </LayoutView> 
     </NotFound>
 </Router>
