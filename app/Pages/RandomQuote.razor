@@ -1,0 +1,47 @@
+@page "/randomquote"
+@inject HttpClient Http
+
+@if(randomquote != null)
+{
+   <div class="container" width="900" height="500">
+        <img src="https://source.unsplash.com/random/" width="950" height="500" />
+        <div class="centered">@randomquote.Quote</div>
+        <div class="bottom-right" font-size="66">@randomquote.Author</div>
+    </div>
+
+    <p>Click here for a new random quote</p>
+    <button class="btn btn-primary" @onclick="GetQuote">Quote</button>
+    
+}
+
+@functions {
+    private QuoteItem randomquote = null;
+    protected override async Task OnInitializedAsync()
+    {
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/randomquote";
+        QuoteItem q = await Http.GetFromJsonAsync<QuoteItem>(url);
+        randomquote = q;
+    }
+
+    private async Task GetQuote()
+    {
+
+        await this.OnInitializedAsync();
+        @* randomquote = null;
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/randomquote";
+        QuoteItem q = await Http.GetFromJsonAsync<QuoteItem>(url);
+        randomquote = q;
+       *@
+    } 
+    public class QuoteItem
+    {
+        public int id { get; set; }
+ 
+        public string Author { get; set; }
+  
+        public string Category { get; set; }
+
+        public string Quote { get; set; }
+   
+    }
+}
