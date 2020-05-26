@@ -1,5 +1,5 @@
 # Setting up Real-Time Serverless App
-url: http://elsermusings.s3-website-us-east-1.amazonaws.com/
+url: https://elsermusings.s3.amazonaws.com/index.html
 
 ## Goals
 1. Learn more about serverless architecture
