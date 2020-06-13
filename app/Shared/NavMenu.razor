@@ -1,10 +1,15 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">app</a>
+﻿<div class="top-row pl-2 navbar navbar-dark">
+<!-- Add font awesome icons -->
+    <a class="navbar-brand" href="">Elser's Musings</a>
+    <a href="https://twitter.com/benjelser" class="fa fa-twitter"></a>
+    <a href="https://www.linkedin.com/in/benjaminelsercissp/" class="fa fa-linkedin"></a>
+    <a href="https://www.youtube.com/user/benjaminelser18/" class="fa fa-youtube"></a>
+    <a href="https://github.com/benelser" class="fa fa-github"></a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
-
+<!-- href resolves to razor page -->
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
@@ -12,7 +17,7 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
+        @* <li class="nav-item px-3">
             <NavLink class="nav-link" href="randomquote">
                 <span class="oi oi-double-quote-serif-left" aria-hidden="true"></span>Random Quote
             </NavLink>
@@ -31,7 +36,7 @@
             <NavLink class="nav-link" href="fetchdatadb">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> DynamoDB Call
             </NavLink>
-        </li>
+        </li> *@
     </ul>
 </div>
 
