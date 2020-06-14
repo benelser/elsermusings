@@ -1,7 +1,16 @@
 ﻿@page "/"
+@inject IJSRuntime _jsRuntime
 
 <h1>Hi, I'm Ben! Welcome to my page. Take a look around.</h1>
 
+<h3>Demonstrating python</h3>
+<pre><code class="lang-python" >def my_function():
+  print("Hello from a function")</code></pre>
 
-
-
+@code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await _jsRuntime.InvokeVoidAsync("removeloader");
+        await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+}
