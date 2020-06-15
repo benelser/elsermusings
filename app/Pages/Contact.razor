@@ -1,0 +1,60 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime _jsRuntime
+@inject HttpClient Http
+@page "/contact"
+
+<h3>Contact Me</h3>
+<p>
+    Let me know a litle bit about you, and I'll be in contact soon.
+</p>
+    <EditForm class="label" Model="@contact" OnValidSubmit="@contact.SayHello">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText label="FirsName" id="FirstName" placeholder="John" @bind-Value="contact.FirstName" />
+        <br />
+        <InputText  id="LastName" placeholder="Doe" @bind-Value="contact.LastName" />
+        <br />
+        <InputText id="Email" placeholder="John.Doe@gmail.com" @bind-Value="contact.Email" />
+        <br />
+        <InputText id="Phone" placeholder="222-333-4455" @bind-Value="contact.Phone" />
+        <br />
+        <button class="btn btn-primary">Submit</button>
+    </EditForm>
+@code{
+
+    // Removes loading animation from dom
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await _jsRuntime.InvokeVoidAsync("removeloader");
+        await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+
+    protected async Task WriteContactInfo()
+    {
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/randomquote";
+        
+    }
+    public ContactModel contact = new ContactModel();
+
+    public class ContactModel
+    {
+        public int Id { get; set; }
+        [Required] 
+        public string FirstName { get; set; }
+        [Required] 
+        public string LastName { get; set; }
+        [Required]
+        [EmailAddress] 
+        public string Email { get; set; }
+        [Required]
+        [Phone] 
+        public string Phone { get; set; }
+        
+
+        public void SayHello()
+        {
+            Console.WriteLine("FirstName: {0}\nEmail: {1}", this.FirstName, this.Email);
+            
+        }
+    }
+}
