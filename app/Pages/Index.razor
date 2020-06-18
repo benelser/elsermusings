@@ -8,9 +8,20 @@
   print("Hello from a function")</code></pre>
 
 @code{
+  public int EventsFired = 0;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await _jsRuntime.InvokeVoidAsync("removeloader");
-        await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+      await _jsRuntime.InvokeVoidAsync("removeloader");
+      await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+
+    protected override void OnInitialized()
+    {
+      // Subscribing to child event not doing anything at the moment
+      Contact.OnEventAdded += () => 
+      {
+        StateHasChanged();
+      };
+
     }
 }

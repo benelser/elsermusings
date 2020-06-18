@@ -1,13 +1,19 @@
 ﻿@using System.ComponentModel.DataAnnotations;
+@using System.ComponentModel;
+@using System.Text.Json;
+@using System.Net.Http.Headers;
+@using System.IO;
+@using System.Text;
 @inject IJSRuntime _jsRuntime
 @inject HttpClient Http
-@page "/contact"
+@page "/signup"
 
-<h3>Contact Me</h3>
+<h3>Let's Connect</h3>
 <p>
-    Let me know a litle bit about you, and I'll be in contact soon.
+    Sign up to get notified of new content as it's released. Always free, always top-notch. Rest assured, knowing I'll keep your data tight and on lock.
 </p>
-    <EditForm class="label" Model="@contact" OnValidSubmit="@contact.SayHello">
+    @* https://blazor-university.com/forms/handling-form-submission/ *@
+    <EditForm class="label" Model="@contact" OnValidSubmit="@ValidFormSubmitted">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <InputText label="FirsName" id="FirstName" placeholder="John" @bind-Value="contact.FirstName" />
@@ -16,12 +22,35 @@
         <br />
         <InputText id="Email" placeholder="John.Doe@gmail.com" @bind-Value="contact.Email" />
         <br />
-        <InputText id="Phone" placeholder="222-333-4455" @bind-Value="contact.Phone" />
+        <InputText id="Phone" placeholder="222-333-4455" @bind-Value="contact.PhoneNumber" />
         <br />
-        <button class="btn btn-primary">Submit</button>
+        <button class="btn btn-primary">Sign Up</button>
     </EditForm>
+
+@if (FormResult == "true")
+{
+    <br />
+    <br />
+    <h6 style="color: green;">Thank you. I'll be in touch soon.</h6>
+    OnEventAdded.Invoke();
+}
+@if((FormResult == "false"))
+{
+    <br />
+    <br />
+    <h6 style="color: red;">Our records indicate @contact.Email is already registered.</h6>
+    OnEventAdded.Invoke();
+
+}
+
 @code{
 
+    public ContactModel contact = new ContactModel();
+    public string FormResult = "";
+
+    // Configure event that other pages and components can subscribe to not being used
+    public static event Action OnEventAdded = () => { };
+    
     // Removes loading animation from dom
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -29,16 +58,17 @@
         await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
     }
 
-    protected async Task WriteContactInfo()
+    // Return Task for view to update
+    protected async Task ValidFormSubmitted(EditContext editContext)
     {
-        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/randomquote";
-        
-    }
-    public ContactModel contact = new ContactModel();
+        ContactModel C = (ContactModel)editContext.Model;
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/contacts";
+        HttpResponseMessage response = await Http.PostAsJsonAsync(url, C);
+        FormResult = await response.Content.ReadAsStringAsync();
 
+    }
     public class ContactModel
     {
-        public int Id { get; set; }
         [Required] 
         public string FirstName { get; set; }
         [Required] 
@@ -48,7 +78,7 @@
         public string Email { get; set; }
         [Required]
         [Phone] 
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
         
 
         public void SayHello()
