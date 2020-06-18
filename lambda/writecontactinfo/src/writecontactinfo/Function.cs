@@ -78,6 +78,7 @@ namespace writecontactinfo
             public async Task<bool> WriteContactInfo()
             {
                 var client = new AmazonDynamoDBClient();
+                this.Email = this.Email.ToLower();
                 DynamoDBContext dbcontext = new DynamoDBContext(client);
                 await dbcontext.SaveAsync(this);
                 return true;        
@@ -90,7 +91,7 @@ namespace writecontactinfo
                 DynamoDBContext dbcontext = new DynamoDBContext(client);
                 try
                 {
-                    var result = await dbcontext.LoadAsync<Contact>(this.Email);
+                    var result = await dbcontext.LoadAsync<Contact>(this.Email.ToLower());
                     Console.WriteLine($"Result of lookup {result}"); 
                     return result;
 
