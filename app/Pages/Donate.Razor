@@ -1,25 +1,26 @@
 @inject IJSRuntime _jsRuntime
 @page "/donate"
 
-
-<!-- Go to www.addthis.com/dashboard to customize your tools -->
-<div class="addthis_inline_share_toolbox">
-    <h1>Test</h1>
-</div>
-            
-
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_donations" />
-<input type="hidden" name="business" value="benjamin.elser18@gmail.com" />
-<input type="hidden" name="currency_code" value="USD" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-</form>
+<h1 class="headers">Donating == Loving</h1>
+<p>
+    If you like what you see here please do not hesitate to dontate. I have five (5) little mouths to feed.
+</p>
+<p>
+    <button @onclick="GoSomewhere" class="btn btn-primary"><i class="fa fa-cc-paypal"></i>  Donate</button>
+</p>
 
 @code{
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await _jsRuntime.InvokeVoidAsync("removeloader");
         await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+
+    protected async void GoSomewhere()
+    {
+        Console.WriteLine("Inside Go somewhere");
+        string url = "https://paypal.me/benjaminelser";
+        await _jsRuntime.InvokeAsync<string>("clientJsfunctions.RedirectTo", url);
     }
 }

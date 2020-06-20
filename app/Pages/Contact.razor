@@ -1,19 +1,14 @@
 ﻿@using System.ComponentModel.DataAnnotations;
-@using System.ComponentModel;
-@using System.Text.Json;
-@using System.Net.Http.Headers;
-@using System.IO;
-@using System.Text;
 @inject IJSRuntime _jsRuntime
 @inject HttpClient Http
 @page "/signup"
 
 <h3>Let's Connect</h3>
 <p>
-    Sign up to get notified of new content as it's released. Always free, always top-notch. Rest assured, knowing I'll keep your data tight and on lock.
+    Sign up to get notified of new content as it's released. Always free, always top-notch. Rest assured knowing I'll keep your data tight and on lock.
 </p>
     @* https://blazor-university.com/forms/handling-form-submission/ *@
-    <EditForm class="label" Model="@contact" OnValidSubmit="@ValidFormSubmitted">
+    <EditForm class="form-group" Model="@contact" OnValidSubmit="@ValidFormSubmitted">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <InputText label="FirsName" id="FirstName" placeholder="John" @bind-Value="contact.FirstName" />
@@ -24,11 +19,22 @@
         <br />
         <InputText id="Phone" placeholder="222-333-4455" @bind-Value="contact.PhoneNumber" />
         <br />
-        <button class="btn btn-primary">Sign Up</button>
+        <InputTextArea id="Message" name="Message" placeholder="Share some love" @bind-Value="contact.Message" />
+        <br />
+        @if (Loading == false || FormResult != "")
+        {
+            <button class="btn btn-primary">Sign Up</button>
+        }
+        else{
+            <LoadingButton Title="Sending"/>        
+        }
+        
     </EditForm>
 
 @if (FormResult == "true")
 {
+    Loading = false;
+    FormResult = "";
     <br />
     <br />
     <h6 style="color: green;">Thank you. I'll be in touch soon.</h6>
@@ -36,6 +42,8 @@
 }
 @if((FormResult == "false"))
 {
+    Loading = false;
+    FormResult = "";
     <br />
     <br />
     <h6 style="color: red;">Our records indicate @contact.Email is already registered.</h6>
@@ -47,6 +55,7 @@
 
     public ContactModel contact = new ContactModel();
     public string FormResult = "";
+    public bool Loading = false;
 
     // Configure event that other pages and components can subscribe to not being used
     public static event Action OnEventAdded = () => { };
@@ -61,6 +70,7 @@
     // Return Task for view to update
     protected async Task ValidFormSubmitted(EditContext editContext)
     {
+        Loading = true;
         ContactModel C = (ContactModel)editContext.Model;
         string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/contacts";
         HttpResponseMessage response = await Http.PostAsJsonAsync(url, C);
@@ -79,12 +89,7 @@
         [Required]
         [Phone] 
         public string PhoneNumber { get; set; }
+        public string Message { get; set; }
         
-
-        public void SayHello()
-        {
-            Console.WriteLine("FirstName: {0}\nEmail: {1}", this.FirstName, this.Email);
-            
-        }
     }
 }

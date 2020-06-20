@@ -69,6 +69,7 @@ namespace writecontactinfo
     
             [DynamoDBProperty("PhoneNumber")]
             public string PhoneNumber { get; set; }
+            public string Message { get; set; }
 
             public string SayHello()
             {

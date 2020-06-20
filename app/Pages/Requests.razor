@@ -1,0 +1,65 @@
+@page "/requests"
+@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime _jsRuntime
+@inject HttpClient Http
+
+@if (FormResult == "")
+{
+    <EditForm class="form-group" Model="@request" OnValidSubmit="@ValidFormSubmitted">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText label="Topic" id="Topic" placeholder="PowerShell" @bind-Value="request.Topic" />
+        <br />
+        <InputTextArea id="Message" name="Message" placeholder="Teach me those cmdlet's" @bind-Value="request.Message" />
+        <br />
+        @if (Loading == false)
+        {
+            <button class="btn btn-primary">Request</button>
+        }
+        else{
+            <LoadingButton Title="Sending"/>        
+        }
+    
+    </EditForm>
+}
+
+
+@if (FormResult != "")
+{
+    Console.WriteLine(request.Message);
+    Loading = false;
+    <br />
+    <h6 style="color: green;">Thanks for the request surrounding @request.Topic. Keep in eye out for a new post around this topic.</h6>
+    OnEventAdded.Invoke();
+}
+
+@code{
+
+    public static event Action OnEventAdded = () => { };
+    public RequestsModel request = new RequestsModel();
+    public string FormResult = "";
+    public bool Loading = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await _jsRuntime.InvokeVoidAsync("removeloader");
+        await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+
+    protected async Task ValidFormSubmitted(EditContext editContext)
+    {
+        Loading = true;
+        RequestsModel request = (RequestsModel)editContext.Model;
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/requests";
+        HttpResponseMessage response = await Http.PostAsJsonAsync(url, request);
+        FormResult = await response.Content.ReadAsStringAsync();
+    }
+
+    public class RequestsModel
+    {
+        [Required] 
+        public string Topic { get; set; }
+        [Required]
+        public string Message { get; set; }
+        
+    }
+}

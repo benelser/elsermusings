@@ -111,7 +111,7 @@ dotnet lambda deploy-function fetchweatherdata --function-role lambda --region u
 ```
 11. Test first lambda function
 ```bash
-dotnet lambda invoke-function fetchweatherdata --payload "Just Checking If Everything is OK" --region us-east-1
+dotnet lambda invoke-function emailservice --payload '{"Topic": "Test", "Message": "I Love lambda"}' --region us-east-1 --profile personalus-east-1
 ```
 
 ## ToDo
