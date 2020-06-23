@@ -1,5 +1,6 @@
 @page "/blog"
 @inject IJSRuntime _jsRuntime
+@inject NavigationManager NavManager
 
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/konpa/devicon@master/devicon.min.css">
@@ -8,32 +9,32 @@
     <h1>blog</h1>
         <ul class="nav flex-lg-row">
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href="blog/go">
                     <i class="devicon-go-plain colored"></i> Go
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="">
+                <NavLink class="nav-link" href="blog/python">
                     <i class="devicon-python-plain colored"></i> Python
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="">
+                <NavLink class="nav-link" href="blog/csharp">
                     <i class="devicon-csharp-plain-wordmark colored"></i> csharp
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="">
+                <NavLink class="nav-link" href="blog/aws">
                     <i class="devicon-amazonwebservices-plain-wordmark colored"></i> AWS
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="">
+                <NavLink class="nav-link" href="blog/linux">
                     <i class="devicon-linux-plain colored"></i> linux
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="">
+                <NavLink class="nav-link" href="blog/Windows">
                     <i class="devicon-windows8-original colored"></i> Windows
                 </NavLink>
             </li>

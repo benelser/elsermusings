@@ -1,0 +1,99 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime _jsRuntime
+@inject HttpClient Http
+@page "/unsubscribe/{GUID}"
+
+<h3>Please confirm email to unsubscribe from @Globals.GetGlobals().SiteName</h3>
+
+    @* https://blazor-university.com/forms/handling-form-submission/ *@
+
+    <EditForm class="form-group" Model="@contact" OnValidSubmit="@ValidFormSubmitted">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText id="Email" placeholder="John.Doe@gmail.com" @bind-Value="contact.Email" />
+        <br />
+        @if (Loading == false && Removed != true)
+        {
+            <button class="btn btn-primary">Unsubscribe</button>
+        }
+        else{
+            if (Removed != true)
+            {
+                <LoadingButton Title="Removing"/>
+            }
+                    
+        }
+        
+    </EditForm>
+
+@if (FormResult != "")
+{
+
+    if (FormResult == "true")
+    {
+        Loading = false;
+        Removed = true;
+        FormResult = "";
+        <br />
+        <br />
+        <h6 style="color: green;">You're email has successfully been removed.</h6>
+        OnEventAdded.Invoke();
+    }
+    if (FormResult == "false")
+    {
+       Loading = false;
+       FormResult = "";
+        <br />
+        <br />
+        <h6 style="color: red;">Something went terribly wrong. Please confirm you are prividing the email you used during registration.</h6>
+        OnEventAdded.Invoke();
+    }
+}
+
+@code{
+
+    public ContactModel contact = new ContactModel();
+    public string FormResult = "";
+    public bool Loading = false;
+    public bool Removed = false;
+    
+    // Define route param
+    [Parameter]
+    public string GUID { get; set; }
+
+    // Configure event that other pages and components can subscribe to not being used
+    public static event Action OnEventAdded = () => { };
+
+    // Set query route param
+    protected override void OnInitialized()
+    {
+        GUID = GUID;
+        contact.GUID = GUID;
+    }
+    
+    // Removes loading animation from dom
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await _jsRuntime.InvokeVoidAsync("removeloader");
+        await _jsRuntime.InvokeVoidAsync("Prism.highlightAll");
+    }
+
+    // Return Task for view to update
+    protected async Task ValidFormSubmitted(EditContext editContext)
+    {
+        Loading = true;
+        ContactModel C = (ContactModel)editContext.Model;
+        string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/unsubscribe";
+        HttpResponseMessage response = await Http.PostAsJsonAsync(url, C);
+        FormResult =  await response.Content.ReadAsStringAsync();
+
+    }
+    public class ContactModel 
+    {
+        [Required]
+        [EmailAddress] 
+        public string Email { get; set; }
+        public string GUID { get; set; }
+        
+    }
+}

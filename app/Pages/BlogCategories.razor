@@ -1,0 +1,96 @@
+@page "/blog/{Category}"
+@inject NavigationManager NavManager
+
+@if (Category == "go")
+{
+     <div>
+        <BlogLayout PageName="Go" Introduction="@Intro" Category="go" SliceOfBlogs="@goblogs"/>
+    </div>
+}
+
+@if (Category == "python")
+{
+     <div>
+        <BlogLayout PageName="Python" Introduction="@Intro" Category="python" SliceOfBlogs="@pythonblogs"/>
+    </div>
+}
+
+@if (Category == "csharp")
+{
+     <div>
+        <BlogLayout PageName="csharp" Introduction="@Intro" Category="csharp" SliceOfBlogs="@csharpblogs"/>
+    </div>
+}
+
+@if (Category == "aws")
+{
+     <div>
+        <BlogLayout PageName="AWS" Introduction="@Intro" Category="AWS" SliceOfBlogs="@awsblogs"/>
+    </div>
+}
+
+@if (Category == "linux")
+{
+     <div>
+        <BlogLayout PageName="linux" Introduction="@Intro" Category="linux" SliceOfBlogs="@linuxblogs"/>
+    </div>
+}
+
+@if (Category == "Windows")
+{
+     <div>
+        <BlogLayout PageName="Windows" Introduction="@Intro" Category="Windows" SliceOfBlogs="@windowsblogs"/>
+    </div>
+}
+   
+
+@code{
+
+    [Parameter]
+    public string title { get; set; }
+    [Parameter]
+    public string Category { get; set; }
+    public string Intro = $@"
+This is a test of writing html and feeding it to my component.
+    ";
+
+    protected override void OnInitialized()
+    {
+        GetBlogs();
+    }
+    public List<Blog> goblogs = new List<Blog>();
+    public List<Blog> pythonblogs = new List<Blog>();
+    public List<Blog> csharpblogs = new List<Blog>();
+    public List<Blog> awsblogs = new List<Blog>();
+    public List<Blog> linuxblogs = new List<Blog>();
+    public List<Blog> windowsblogs = new List<Blog>();
+
+    // turn this into interface
+    public void GetBlogs()
+    {
+        Blog firstBlog = new Blog("Blog1","Ben", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        goblogs.Add(firstBlog);
+        Blog secondBlog = new Blog("Blog2","Ben", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        goblogs.Add(firstBlog);
+        Blog python1blog = new Blog("py1","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        pythonblogs.Add(python1blog);
+        Blog python2blog = new Blog("py2","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        pythonblogs.Add(python2blog);
+        Blog csharp1blog = new Blog("csharp1","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        csharpblogs.Add(csharp1blog);
+        Blog csharp2blog = new Blog("csharp2","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        csharpblogs.Add(csharp2blog);
+        Blog aws1blog = new Blog("aws1","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        awsblogs.Add(aws1blog);
+        Blog aws2blog = new Blog("aws2","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        awsblogs.Add(aws2blog);
+        Blog linux1blog = new Blog("linux1","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        linuxblogs.Add(linux1blog);
+        Blog linux2blog = new Blog("linux2","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        linuxblogs.Add(linux2blog);
+        Blog windows1blog = new Blog("windows1","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        windowsblogs.Add(windows1blog);
+        Blog windows2blog = new Blog("windows","Mat", DateTime.Today, "<p>This is a <strong>custom HTML</strong> code</p>");
+        windowsblogs.Add(windows2blog);
+    }
+}

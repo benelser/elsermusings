@@ -1,0 +1,35 @@
+<div>
+    <h2>@PageName</h2>
+    <br />
+    <p>@Introduction</p>
+    @foreach (Blog blog in SliceOfBlogs)
+    {
+        <div>
+            <Blog title="@blog.Title" Author="@blog.Author" DatePublished="@blog.DatePublished" Body="@blog.Body" /> 
+        </div>
+    }
+</div>
+
+@code{
+    [Parameter]
+    public string PageName { get; set; }
+    [Parameter]
+    public string Category { get; set; }
+    [Parameter]
+    public string Introduction { get; set; }
+    [Parameter]
+    public List<Blog> SliceOfBlogs { get; set; }
+
+    
+    public BlogLayout()
+    {
+        
+    }
+
+    public BlogLayout(string pagename, string introduction, List<Blog> blogs)
+    {
+        PageName = pagename;
+        Introduction = Introduction;
+        SliceOfBlogs = blogs;
+    }
+}

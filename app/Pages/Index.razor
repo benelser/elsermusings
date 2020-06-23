@@ -22,5 +22,10 @@
       {
         StateHasChanged();
       };
+
+      Unsubscribe.OnEventAdded += () => 
+      {
+        StateHasChanged();
+      };
     }
 }

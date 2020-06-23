@@ -1,0 +1,34 @@
+<div>
+    <h2>@Title</h2>
+    <br />
+    <p>@Author</p>
+    <p>@DatePublished</p>
+    <body>
+        @((MarkupString)Body)
+    </body>
+</div>
+
+
+@code{
+    // Each component is it's own class
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public string Author { get; set; } 
+    [Parameter]
+    public DateTime DatePublished { get; set; }
+    [Parameter]
+    public string Body { get; set; }
+    public Blog()
+    {
+        
+    }
+
+    public Blog(string title, string author, DateTime datepublished, string body)
+    {
+        this.Title = title;
+        this.Author = author;
+        this.DatePublished = datepublished;
+        this.Body = body;
+    }
+}

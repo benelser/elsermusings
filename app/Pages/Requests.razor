@@ -10,6 +10,8 @@
         <ValidationSummary />
         <InputText label="Topic" id="Topic" placeholder="PowerShell" @bind-Value="request.Topic" />
         <br />
+        <InputText label="Email" id="Email" placeholder="jane.doe@gmail.com" @bind-Value="request.Email" />
+        <br />
         <InputTextArea id="Message" name="Message" placeholder="Teach me those cmdlet's" @bind-Value="request.Message" />
         <br />
         @if (Loading == false)
@@ -49,15 +51,19 @@
     {
         Loading = true;
         RequestsModel request = (RequestsModel)editContext.Model;
+        Console.WriteLine(request.OrgId);
         string url = "https://qt9yfmkihi.execute-api.us-east-1.amazonaws.com/prod/requests";
         HttpResponseMessage response = await Http.PostAsJsonAsync(url, request);
         FormResult = await response.Content.ReadAsStringAsync();
     }
 
-    public class RequestsModel
+    public class RequestsModel : Globals
     {
         [Required] 
         public string Topic { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
         [Required]
         public string Message { get; set; }
         

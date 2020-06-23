@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.DynamoDBv2;
@@ -69,6 +70,8 @@ namespace writecontactinfo
     
             [DynamoDBProperty("PhoneNumber")]
             public string PhoneNumber { get; set; }
+            [DynamoDBProperty("GUID")]
+            public string GUID = Guid.NewGuid().ToString();
             public string Message { get; set; }
 
             public string SayHello()

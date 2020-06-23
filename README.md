@@ -107,17 +107,16 @@ These roles are used to give AWS services internal access to each other. We need
 
 10. Deploy first lambda function
 ```bash
-dotnet lambda deploy-function fetchweatherdata --function-role lambda --region us-east-1 --profile personal
+dotnet lambda deploy-function unsubscribe --function-role lambda --region us-east-1 --profile personal
 ```
 11. Test first lambda function
 ```bash
-dotnet lambda invoke-function emailservice --payload '{"Topic": "Test", "Message": "I Love lambda"}' --region us-east-1 --profile personalus-east-1
+dotnet lambda invoke-function unsubscribe --payload ./test.json  --region us-east-1 --profile personal
 ```
 
 ## ToDo
-1. Complete writecontactinfo 
-2. Add Site Navigation
-    - Blog
-        * categories
-        * Etc
-3. Add Share feature
+- Learn blazor service creation and implementation
+- Implement EmailService in the WriteContactInfo lambda
+    - Need to work out layer development and creation
+- Add social media Share feature
+- Complete EmailService and error handling -- Eventually, not required right now.
