@@ -107,14 +107,20 @@ These roles are used to give AWS services internal access to each other. We need
 
 10. Deploy first lambda function
 ```bash
-dotnet lambda deploy-function unsubscribe --function-role lambda --region us-east-1 --profile personal
+dotnet lambda deploy-function googlecalendar --function-role lambda --region us-east-1 --profile personal
 ```
 11. Test first lambda function
 ```bash
-dotnet lambda invoke-function unsubscribe --payload ./test.json  --region us-east-1 --profile personal
+dotnet lambda invoke-function googlecalendar  --region us-east-1 --profile personal
 ```
 
 ## ToDo
+- Implement blog dynamodb schema and table
+- Implement read operation of blogs
+    - Read initial chunk for rendering
+    - Read chunk more all sequential loads
+        - Implement on bloglayout
+            - button to load more blogs or to load on scroll
 - Learn blazor service creation and implementation
 - Implement EmailService in the WriteContactInfo lambda
     - Need to work out layer development and creation

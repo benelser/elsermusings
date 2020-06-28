@@ -1,14 +1,26 @@
-<div>
-    <h2>@PageName</h2>
-    <br />
-    <p>@Introduction</p>
-    @foreach (Blog blog in SliceOfBlogs)
-    {
-        <div>
-            <Blog title="@blog.Title" Author="@blog.Author" DatePublished="@blog.DatePublished" Body="@blog.Body" /> 
-        </div>
-    }
-</div>
+@if(SingleBlogRender)
+{
+     <div>
+        <Blog title="@SliceOfBlogs[0].Title" Author="@SliceOfBlogs[0].Author" DatePublished="@SliceOfBlogs[0].DatePublished" Body="@SliceOfBlogs[0].Body" Category="@Category" Trim=false/> 
+     </div>
+}
+else
+{
+   <div>
+        <h2>@PageName</h2>
+        <p>@Introduction</p>
+        @foreach (Blog blog in SliceOfBlogs)
+        {
+            <div>
+                @for (int i = 0; i < 10; i++)
+                {
+                    <Blog title="@blog.Title" Author="@blog.Author" DatePublished="@blog.DatePublished" Body="@blog.Body" Category="@Category" Trim=true/> 
+                }
+            </div>
+        }
+    </div> 
+}
+
 
 @code{
     [Parameter]
@@ -19,7 +31,7 @@
     public string Introduction { get; set; }
     [Parameter]
     public List<Blog> SliceOfBlogs { get; set; }
-
+    protected bool SingleBlogRender { get; set; } = false;
     
     public BlogLayout()
     {

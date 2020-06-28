@@ -1,12 +1,35 @@
-<div>
-    <h2>@Title</h2>
-    <br />
+@using System.Text;
+@using System.Text.RegularExpressions;
+@inject NavigationManager NavManager
+@if (Trim == true)
+{
+    <div>
+        <a @onclick=@(() => Console.WriteLine("test"))>
+            <h2>@Title</h2>
+        </a>
+    
     <p>@Author</p>
+    <p>@Category</p>
+    <p>@DatePublished</p>
+    <body>
+        @TrimedBody
+    </body>
+</div>
+
+}
+else
+{
+    <div>
+    <h2>@Title</h2>
+    <p>@Author</p>
+     <p>@Category</p>
     <p>@DatePublished</p>
     <body>
         @((MarkupString)Body)
     </body>
 </div>
+
+}
 
 
 @code{
@@ -19,6 +42,23 @@
     public DateTime DatePublished { get; set; }
     [Parameter]
     public string Body { get; set; }
+    [Parameter]
+    public string Category { get; set; }
+    [Parameter]
+    public bool Trim { get; set; }
+    private MarkupString BodyString { get; set;}
+    private string TrimedBody { get; set; }
+    private string href  { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        this.BodyString = ((MarkupString)this.Body);
+        this.TrimBody(100);
+        this.href = $"blog/{Category}/{Title}";
+
+    }
+
     public Blog()
     {
         
@@ -30,5 +70,20 @@
         this.Author = author;
         this.DatePublished = datepublished;
         this.Body = body;
+    }
+
+    private void TrimBody(int wordamount)
+    {
+        string[] words = this.BodyString.ToString().Split(" ");
+        StringBuilder sb = new StringBuilder();
+        sb.AppendJoin(" ", words.Take(wordamount));
+        string htmltagspatter = "<[^>]*>";
+        this.TrimedBody = Regex.Replace(sb.ToString(), htmltagspatter, String.Empty);
+        
+    }
+
+    public override string ToString()
+    {
+        return $"href: {href} TrimState: {this.Trim} Title: {this.Title} Author: {this.Author} Date: {this.DatePublished} Category: {this.Category}";
     }
 }
