@@ -1,4 +1,5 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -47,11 +48,11 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, rgb(78, 130, 228) 0%, rgb(144, 203, 238) 70%);
 }
 
     .sidebar .top-row {
-        background-color: rgba(0,0,0,0.4);
+        background-color: rgb(9, 122, 167);
     }
 
     .sidebar .navbar-brand {
@@ -59,7 +60,7 @@ app {
     }
 
     .sidebar .oi {
-        width: 2rem;
+        width: 4rem;
         font-size: 1.1rem;
         vertical-align: text-top;
         top: -2px;
@@ -156,7 +157,7 @@ app {
     }
 
     .sidebar {
-        width: 250px;
+        width: 300px;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -181,3 +182,43 @@ app {
         display: block;
     }
 }
+.fa {
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 15px;
+    width: 20px;
+    text-align: center;
+    text-decoration: none;
+    margin: 2px 2px;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-github {
+background: #000000;
+color: white;
+}
+
+.fa-twitter {
+background: #55ACEE;
+color: white;
+}
+
+.fa-google {
+background: #dd4b39;
+color: white;
+}
+
+.fa-linkedin {
+background: #007bb5;
+color: white;
+}
+
+.fa-youtube {
+background: #bb0000;
+color: white;
+}
+
+.label { display: inline-block; width: 210px; text-align: left; }
