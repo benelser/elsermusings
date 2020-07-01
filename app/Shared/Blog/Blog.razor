@@ -1,0 +1,63 @@
+@inherits BlogBase
+
+@* Render Cards *@
+@if (Trim == true)
+{
+    <div class="container-fluid p-2">
+        <div class="card">
+            <div class="card-body">
+                <a href="@href" @onclick="GetSelectedBlog">
+                    <h4 class="card-title">@Title</h4>
+                </a>
+                <ul class="list-inline">
+                    <li class="list-inline-item">@Author</li>
+                    <li class="list-inline-item">@DatePublished</li>
+                </ul>
+                <p class="card-text">
+                @((MarkupString)@TrimedBody) <a href="@href" @onclick="GetSelectedBlog"></a>
+                </p>
+                <a href="@href" @onmouseout="ChangeButtonPrimary" @onmouseover="ChangeButtonSecondary" @onclick="GetSelectedBlog" class="@ButtonClass">Read more</a>
+            </div>
+        </div>
+     </div>
+}
+@if (Trim == false && SingleRender != true)
+{
+    <div class="container">
+        <h1 class="display-4">@Title</h1>
+            <ul class="list-inline">
+                <li class="list-inline-item">@Author</li>
+                <li class="list-inline-item">@DatePublished</li>
+            </ul>
+            <body>
+                @((MarkupString)Body)
+            </body>
+    </div>
+
+}
+@if (SingleRender == true)
+{
+    <div class="container">
+        <h1 class="display-4">@Title</h1>
+            <ul class="list-inline">
+                <li class="list-inline-item">@Author</li>
+                <li class="list-inline-item">@DatePublished</li>
+            </ul>
+            <body>
+                @((MarkupString)Body)
+            </body>
+    </div>
+}
+
+@code{
+    private string ButtonClass = "btn btn-primary";
+    void ChangeButtonSecondary()
+    {
+        ButtonClass = "btn btn-secondary";
+    }
+
+    void ChangeButtonPrimary()
+    {
+        ButtonClass = "btn btn-primary";
+    }
+}

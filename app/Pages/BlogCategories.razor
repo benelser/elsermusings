@@ -1,108 +1,35 @@
-@page "/blog/{Category}"
-@inject NavigationManager NavManager
+@page "/Blog/{Category}"
+@page "/Blog/{Category}/{Title}/{UUID}"
+@inherits BlogCategoriesBase
+@using app.Shared.Blog;
 
-@if (Category == "go")
+@if (Title != null && Category != null && UUID != null && Title != null && BlogSelected == false)
 {
-     <div>
-        <BlogLayout PageName="Go" Introduction="@Intro" Category="go" SliceOfBlogs="@goblogs"/>
+    BlogBase b = BlogBase.GetSpecificBlogBaseByUUID(UUID);
+    <div>
+        <Blog UUID="@b.UUID" OnClickEvent="OnSelectedBlog" Title="@b.Title" Author="@b.Author" DatePublished="@b.DatePublished" Category="@b.Category" Body="@b.Body" Trim=false SingleRender=true />
     </div>
 }
-
-@if (Category == "python")
+else
 {
-     <div>
-        <BlogLayout PageName="Python" Introduction="@Intro" Category="python" SliceOfBlogs="@pythonblogs"/>
-    </div>
-}
-
-@if (Category == "csharp")
-{
-     <div>
-        <BlogLayout PageName="csharp" Introduction="@Intro" Category="csharp" SliceOfBlogs="@csharpblogs"/>
-    </div>
-}
-
-@if (Category == "aws")
-{
-     <div>
-        <BlogLayout PageName="AWS" Introduction="@Intro" Category="AWS" SliceOfBlogs="@awsblogs"/>
-    </div>
-}
-
-@if (Category == "linux")
-{
-     <div>
-        <BlogLayout PageName="linux" Introduction="@Intro" Category="linux" SliceOfBlogs="@linuxblogs"/>
-    </div>
-}
-
-@if (Category == "Windows")
-{
-     <div>
-        <BlogLayout PageName="Windows" Introduction="@Intro" Category="Windows" SliceOfBlogs="@windowsblogs"/>
-    </div>
-}
-   
-
-@code{
-
-    [Parameter]
-    public string title { get; set; }
-    [Parameter]
-    public string Category { get; set; }
-    public string Intro = $@"
-This is a test of writing html and feeding it to my component.
-    ";
-    public string BodyBlob = $@"
-<h2>Why painful the sixteen how minuter looking nor</h2>
-<p>In as name to here <strong>This text is important!</strong> them deny wise this. As rapid woody my he me which. Men but they fail shew just wish next put. Led all visitor musical calling nor her. Within coming figure sex things are. Pretended concluded did repulsive education smallness yet yet described. Had country man his pressed shewing. No gate dare rose he. Eyes year if miss he as upon.</p>
-<p>He went such dare good mr fact. The small own seven saved <strong>This text is important!</strong> man age ﻿no offer. Suspicion did mrs nor furniture smallness. Scale whole downs often leave not eat. An expression reasonably cultivated indulgence mr he surrounded instrument. Gentleman eat and consisted are pronounce distrusts.</p>
-<p>And produce say the ten moments parties. Simple innate summer fat appear basket his desire joy. Outward clothes promise at gravity do excited. Sufficient particular impossible by reasonable oh expression is. Yet preference connection unpleasant yet melancholy but end appearance. And excellence partiality estimating terminated day everything.</p>
-<p>Able an hope of body. <strong>This text is important!</strong> Any nay shyness article matters own removal nothing his forming. Gay own additions education satisfied the perpetual. If he cause manor happy. Without farther she exposed saw man led. Along on happy could cease green oh.</p>
-<p>Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of. Consider speaking me prospect whatever if. Ten nearer rather hunted six parish indeed number. Allowance repulsive sex may contained can set suspected abilities cordially. Do part am he high rest that. So fruit to ready it being views match.</p>
-<p>Talent she for lively eat led sister. Entrance strongly packages she out rendered get quitting denoting led. Dwelling confined improved it he no doubtful raptures. Several carried through an of up attempt gravity. Situation to be at offending elsewhere distrusts if. Particular use for considered projection cultivated. Worth of do doubt shall it their. Extensive existence up me contained he pronounce do. Excellence inquietude assistance precaution any impression man sufficient.</p>
-<p>Improved own provided blessing may peculiar domestic. Sight house has sex never. No visited raising gravity outward subject my cottage mr be. Hold do at tore in park feet near my case. Invitation at understood occasional sentiments insipidity inhabiting in. Off melancholy alteration principles old. Is do speedily kindness properly oh. Respect article painted cottage he is offices parlors.</p>
-<p>Depart do be so he enough talent. Sociable formerly six but handsome. Up do view time they shot. He concluded disposing provision by questions as situation. Its estimating are motionless day sentiments end. Calling an imagine at forbade. At name no an what like spot. Pressed my by do affixed he studied.</p>
-<p>Lose eyes get fat shew. Winter can indeed letter oppose way change tended now. So is improve my charmed picture exposed adapted demands. Received had end produced prepared diverted strictly off man branched. Known ye money so large decay voice there to. Preserved be mr cordially incommode as an. He doors quick child an point at. Had share vexed front least style off why him.</p>
-";
-
-    protected override void OnInitialized()
+    @if (Category == null || Title == null)
     {
-        GetBlogs();
-    }
-    public List<Blog> goblogs = new List<Blog>();
-    public List<Blog> pythonblogs = new List<Blog>();
-    public List<Blog> csharpblogs = new List<Blog>();
-    public List<Blog> awsblogs = new List<Blog>();
-    public List<Blog> linuxblogs = new List<Blog>();
-    public List<Blog> windowsblogs = new List<Blog>();
-
-    // turn this into interface
-    public void GetBlogs()
+        <h1 class="display-4">@Category</h1>
+        foreach (BlogBase b in FetchedBlogs)
+        {
+            <div>
+                <Blog UUID="@b.UUID" OnClickEvent="OnSelectedBlog" Title="@b.Title" Author="@b.Author" DatePublished="@b.DatePublished" Category="@b.Category" Body="@b.Body" Trim=true SingleRender=false />
+            </div>
+        }
+        if (TotalNumberOfBlogs > FetchedBlogs.Count)
+        {
+            <div class="mx-auto" style="width: 200px;">
+                <button class="btn btn-light" @onclick="LoadMoreBlogs">Load More</button>
+            </div>
+        }
+    }  
+    @if (BlogSelected == true && Title != null && Category != null && UUID != null)
     {
-        Blog firstBlog = new Blog("Blog1","Ben", DateTime.Today, BodyBlob);
-        goblogs.Add(firstBlog);
-        Blog secondBlog = new Blog("Blog2","Ben", DateTime.Today, BodyBlob);
-        goblogs.Add(firstBlog);
-        Blog python1blog = new Blog("py1","Mat", DateTime.Today, BodyBlob);
-        pythonblogs.Add(python1blog);
-        Blog python2blog = new Blog("py2","Mat", DateTime.Today, BodyBlob);
-        pythonblogs.Add(python2blog);
-        Blog csharp1blog = new Blog("csharp1","Mat", DateTime.Today, BodyBlob);
-        csharpblogs.Add(csharp1blog);
-        Blog csharp2blog = new Blog("csharp2","Mat", DateTime.Today, BodyBlob);
-        csharpblogs.Add(csharp2blog);
-        Blog aws1blog = new Blog("aws1","Mat", DateTime.Today, BodyBlob);
-        awsblogs.Add(aws1blog);
-        Blog aws2blog = new Blog("aws2","Mat", DateTime.Today, BodyBlob);
-        awsblogs.Add(aws2blog);
-        Blog linux1blog = new Blog("linux1","Mat", DateTime.Today, BodyBlob);
-        linuxblogs.Add(linux1blog);
-        Blog linux2blog = new Blog("linux2","Mat", DateTime.Today, BodyBlob);
-        linuxblogs.Add(linux2blog);
-        Blog windows1blog = new Blog("windows1","Mat", DateTime.Today, BodyBlob);
-        windowsblogs.Add(windows1blog);
-        Blog windows2blog = new Blog("windows","Mat", DateTime.Today, BodyBlob);
-        windowsblogs.Add(windows2blog);
+        <Blog UUID=@SelectedBlog.UUID OnClickEvent="@OnSelectedBlog" Title=@SelectedBlog.Title Author=@SelectedBlog.Author Category=@SelectedBlog.Category DatePublished=@SelectedBlog.DatePublished Body=@SelectedBlog.Body Trim=false />
     }
 }
