@@ -2,27 +2,49 @@
 @using System.ComponentModel.DataAnnotations;
 @inject IJSRuntime _jsRuntime
 @inject HttpClient Http
+<h3 class="display-4">got an idea?</h3>
+<p class="lead">
+Tell me about it and I'll see what I can do!
+</p>
 
 @if (FormResult == "")
 {
-    <EditForm class="form-group" Model="@request" OnValidSubmit="@ValidFormSubmitted">
+    <div class="container">
+    <EditForm Model="@request" OnValidSubmit="@ValidFormSubmitted">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <InputText label="Topic" id="Topic" placeholder="PowerShell" @bind-Value="request.Topic" />
-        <br />
-        <InputText label="Email" id="Email" placeholder="jane.doe@gmail.com" @bind-Value="request.Email" />
-        <br />
-        <InputTextArea id="Message" name="Message" placeholder="Teach me those cmdlet's" @bind-Value="request.Message" />
-        <br />
-        @if (Loading == false)
+        <div class="form-group row">
+            <div class="col-sm-6 offset-sm-2">
+                <InputText class="form-control" label="Topic" id="Topic" placeholder="PowerShell" @bind-Value="request.Topic" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6 offset-sm-2">
+                <InputText class="form-control" label="Email" id="Email" placeholder="jane.doe@gmail.com" @bind-Value="request.Email" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-6 offset-sm-2">
+                <InputTextArea class="form-control" id="Message" name="Message" placeholder="Tell me more, tell me more :)" @bind-Value="request.Message" />
+            </div>
+        </div>
+            @if (Loading == false || FormResult != "")
         {
-            <button class="btn btn-primary">Request</button>
+            <div class="form-group row">
+                <div class="col-sm-6 offset-sm-2">
+                    <button class="btn btn-primary">Request</button>
+                </div>  
+            </div>
         }
         else{
-            <LoadingButton Title="Sending"/>        
+            <div class="form-group row">
+                <div class="col-sm-6 offset-sm-2">
+                    <LoadingButton Title="Sending"/>   
+                </div>  
+            </div>     
         }
-    
     </EditForm>
+    </div>
 }
 
 
@@ -31,7 +53,9 @@
     Console.WriteLine(request.Message);
     Loading = false;
     <br />
-    <h6 style="color: green;">Thanks for the request surrounding @request.Topic. Keep in eye out for a new post around this topic.</h6>
+    <div class="alert alert-success" role="alert">
+    <strong>All set!</strong> Thanks for the request surrounding @request.Topic. Keep in eye out for a new post around this topic.
+    </div>
     OnEventAdded.Invoke();
 }
 
