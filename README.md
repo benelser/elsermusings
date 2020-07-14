@@ -107,14 +107,15 @@ These roles are used to give AWS services internal access to each other. We need
 
 10. Deploy first lambda function
 ```bash
-dotnet lambda deploy-function googlecalendar --function-role lambda --region us-east-1 --profile personal
+dotnet lambda deploy-function spotify --function-role lambda --region us-east-1 --profile personal
 ```
 11. Test first lambda function
 ```bash
-dotnet lambda invoke-function googlecalendar  --region us-east-1 --profile personal
+dotnet lambda invoke-function spotify  --region us-east-1 --profile personal
 ```
 
 ## ToDo
+- Implement email functionaility inside of writecontactinfo
 - Implement blog dynamodb schema and table
 - Implement read operation of blogs
     - Read initial chunk for rendering

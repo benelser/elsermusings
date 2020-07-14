@@ -25,10 +25,20 @@ namespace writecontactinfo
         /// <returns></returns>
         public bool FunctionHandler(Contact input, ILambdaContext context)
         {
-            var EmailCheck = input.LookUpEmail();
-            EmailCheck.Wait();
-            var C = EmailCheck.Result;
-            if (C == null)
+            
+            Organization currentOrg;
+            Contact currentContact;
+            try
+            {
+                currentOrg = Organization.GetOrganization(input.OrgId);
+                currentContact = Contact.GetContact(input.Email, currentOrg.Id);
+                var EmailCheck = currentContact.LookUpEmail();
+                EmailCheck.Wait();
+                Console.WriteLine($"{currentContact.Email} already exists in database.");
+                return false;
+                
+            }
+            catch (NullReferenceException)
             {
                 Console.WriteLine($"Email does not exist. Creating email: {input.Email}");
                 var WriteContactTask = input.WriteContactInfo();
@@ -44,23 +54,15 @@ namespace writecontactinfo
                 {
                     return false;
                 }
-                
             }
-            else
-            {
-                Console.WriteLine($"{input.Email} already exists in database.");
-                return false;
-            }
-            
             
         }
     }
 
-        [DynamoDBTable("contacts")]
         public class Contact
         {
     
-            [DynamoDBHashKey]
+            [DynamoDBHashKey("email")]
             public string Email { get; set; }
 
             [DynamoDBProperty("FirstName")]
@@ -72,18 +74,51 @@ namespace writecontactinfo
             public string PhoneNumber { get; set; }
             [DynamoDBProperty("GUID")]
             public string GUID = Guid.NewGuid().ToString();
+            [DynamoDBProperty("OrgId")]
+            public string OrgId { get; set; }
             public string Message { get; set; }
 
             public string SayHello()
             {
                 return $"Hello {this.FirstName}";
             }
+            private static async Task<Contact> GetContactData(Contact C, string OrgId)
+            {
+                var client = new AmazonDynamoDBClient();
+                var dbcontextconfig = new DynamoDBContextConfig();
+                dbcontextconfig.TableNamePrefix = $"{OrgId}-";
+                DynamoDBContext dbcontext = new DynamoDBContext(client, dbcontextconfig);
+                try
+                {
+                    var result = await dbcontext.LoadAsync<Contact>(C.Email);
+                    // this.Name = result;
+                    // this.Domain = currentOrg.Domain;
+                    Console.WriteLine($"Contact {result}"); 
+                    return result;
+
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Exception thrown inside GetContactData");
+                    return new Contact();
+                }
+            }
+
+            public static Contact GetContact(string email, string OrgId){
+                Contact C = new Contact();
+                C.Email = email;
+                var result = GetContactData(C, OrgId);
+                result.Wait();
+                return result.Result;
+            }
 
             public async Task<bool> WriteContactInfo()
             {
                 var client = new AmazonDynamoDBClient();
                 this.Email = this.Email.ToLower();
-                DynamoDBContext dbcontext = new DynamoDBContext(client);
+                var dbcontextconfig = new DynamoDBContextConfig();
+                dbcontextconfig.TableNamePrefix = $"{this.OrgId}-";
+                DynamoDBContext dbcontext = new DynamoDBContext(client, dbcontextconfig);
                 await dbcontext.SaveAsync(this);
                 return true;        
                 
@@ -92,7 +127,9 @@ namespace writecontactinfo
             public async Task<Contact> LookUpEmail()
             {
                 var client = new AmazonDynamoDBClient();
-                DynamoDBContext dbcontext = new DynamoDBContext(client);
+                var dbcontextconfig = new DynamoDBContextConfig();
+                dbcontextconfig.TableNamePrefix = $"{this.OrgId}-";
+                DynamoDBContext dbcontext = new DynamoDBContext(client, dbcontextconfig);
                 try
                 {
                     var result = await dbcontext.LoadAsync<Contact>(this.Email.ToLower());
@@ -106,6 +143,46 @@ namespace writecontactinfo
                     return C;
                 }
                     
+            }
+        }
+
+        [DynamoDBTable("organizations")]
+        public class Organization
+        {
+
+            [DynamoDBHashKey]
+            public string Id { get; set; }
+            [DynamoDBProperty("Domain")]
+            public string Domain { get; set; }
+            [DynamoDBProperty("Name")]
+            public string Name { get; set; }
+
+            private static async Task<Organization> GetOrganizationData(Organization org)
+            {
+                var client = new AmazonDynamoDBClient();
+                DynamoDBContext dbcontext = new DynamoDBContext(client);
+                try
+                {
+                    var result = await dbcontext.LoadAsync<Organization>(org.Id);
+                    // this.Name = result;
+                    // this.Domain = currentOrg.Domain;
+                    Console.WriteLine($"Organization {result}"); 
+                    return result;
+
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Exception thrown inside GetORg");
+                    return new Organization();
+                }
+            }
+
+            public static Organization GetOrganization(string id){
+                Organization org = new Organization();
+                org.Id = id;
+                var result = GetOrganizationData(org);
+                result.Wait();
+                return result.Result;
             }
         }
 }
