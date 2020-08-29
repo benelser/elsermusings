@@ -30,10 +30,11 @@ namespace googlecalendar
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public void FunctionHandler(ILambdaContext context)
+        public IList<Event> FunctionHandler(ILambdaContext context)
         {
             
-            string key = "googlecalendarapi";
+            // Authentication code
+            string key = "starthebandgooglecalendarapi";
             string credentialFile = Environment.GetEnvironmentVariable(key);
             AmazonS3Client client = new AmazonS3Client();
             string credentialFileContents = ReadS3CredentialFile(client, key, credentialFile);
@@ -47,17 +48,14 @@ namespace googlecalendar
             CalendarService.Scope.CalendarEventsReadonly  
             };  
             GoogleCredential credential;
-            
+            // Assume account using service account with domain deledation
             using (var stream = new FileStream(pathToCredentials, FileMode.Open, FileAccess.Read))
             {
                 credential = GoogleCredential.FromStream(stream)
-                                .CreateScoped(scopes).CreateWithUser("belser@elsersmusings.com");
+                                .CreateScoped(scopes).CreateWithUser("theband@startheband.com");
             }
-
-            // Create the Calendar service.
-            //delegated_credentials = credential.WithSubject("belser@elsersmusings.com");
-            //delegated_credentials = credentials.with_subject();
             
+            // Creating the service
             var service = new CalendarService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
@@ -65,11 +63,13 @@ namespace googlecalendar
             });
 
              // Define parameters of request.
+             // Getting revent 12 months out
             EventsResource.ListRequest request = service.Events.List("primary");
             request.TimeMin = DateTime.Now;
+            request.TimeMax = DateTime.Now.AddMonths(12);
             request.ShowDeleted = false;
             request.SingleEvents = true;
-            request.MaxResults = 10;
+            request.MaxResults = 2500;
             request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
             // List events.
@@ -86,21 +86,39 @@ namespace googlecalendar
                     }
                     Console.WriteLine("{0} ({1})", eventItem.Summary, when);
                 }
+
+                return events.Items;
             }
             else
             {
                 Console.WriteLine("No upcoming events found.");
+                return events.Items;
+                
             }
+            
+        }
 
-            // Makes request to specific rest endpoint and returns json
-            // var cal = service.HttpClient.GetAsync("https://www.googleapis.com/calendar/v3/users/me/calendarList");
-            // cal.Wait();
-            // var response = cal.Result;
-            // var body = response.Content.ReadAsStringAsync();
-            // body.Wait();
-            // var bodystring = body.Result;
-            // Console.WriteLine($"Result {bodystring}");
+        public static string ReadS3CredentialFile(AmazonS3Client client, string bn, string S3Key)
+        {
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bn,
+                Key = S3Key
+            };
+            var task = client.GetObjectAsync(request);
+            task.Wait();
+            GetObjectResponse response =  task.Result;
 
+            StreamReader reader = new StreamReader(response.ResponseStream);
+
+            String content = reader.ReadToEnd();
+
+            Console.Out.WriteLine("Read S3 object with key " + S3Key + " in bucket " + bn + ". Content is: " + content);
+            return content;
+        }
+
+        public static void CreateEvent(CalendarService service)
+        {
             // https://developers.google.com/calendar/v3/reference/events/insert
             Event NewEvent = new Event();
             NewEvent.GuestsCanInviteOthers = true;
@@ -127,27 +145,9 @@ namespace googlecalendar
 
         }
 
-        public static string ReadS3CredentialFile(AmazonS3Client client, string bn, string S3Key)
-        {
-            GetObjectRequest request = new GetObjectRequest
-            {
-                BucketName = bn,
-                Key = S3Key
-            };
-            var task = client.GetObjectAsync(request);
-            task.Wait();
-            GetObjectResponse response =  task.Result;
-
-            StreamReader reader = new StreamReader(response.ResponseStream);
-
-            String content = reader.ReadToEnd();
-
-            //Console.Out.WriteLine("Read S3 object with key " + S3Key + " in bucket " + bn + ". Content is: " + content);
-            return content;
-        }
-
         
     }
+
 
     public static class ExtendedMethods
     {

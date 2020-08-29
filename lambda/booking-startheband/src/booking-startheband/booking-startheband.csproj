@@ -5,9 +5,9 @@
     <AWSProjectType>Lambda</AWSProjectType>
   </PropertyGroup>
   <ItemGroup>
-  <EmbeddedResource Include="email.html" />
+    <EmbeddedResource Include="email.html" />
     <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.0.1" />
-      <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.18" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.18" />
   </ItemGroup>
 </Project>

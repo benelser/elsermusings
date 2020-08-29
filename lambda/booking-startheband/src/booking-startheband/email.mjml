@@ -1,0 +1,19 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-image width="450px" height="150px" src="https://www.osservatorioantitrust.eu/en/wp-content/uploads/2015/04/book-2.jpg"></mj-image>
+
+        <mj-divider border-color="#40bfff"></mj-divider>
+        <mj-text font-size="18px" color="#663af4" font-family="helvetica">Hey Band! You are in hot demand! Potential gig info below.</mj-text>
+        <mj-divider border-color="#40bfff"></mj-divider>
+        <mj-text font-size="14px" color="#4030ff" font-family="helvetica">Name: {FirstName} {LastName}</mj-text>
+        <mj-text font-size="14px" color="#4030ff" font-family="helvetica">Email: {Email}</mj-text>
+        <mj-text font-size="14px" color="#4030ff" font-family="helvetica">PhoneNumber: {PhoneNumber}</mj-text>
+        <mj-text font-size="14px" color="#4030ff" font-family="helvetica">Desired Date: {DesiredDate}</mj-text>
+        <mj-text font-size="14px" color="#4030ff" font-family="helvetica">Message: {Message}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

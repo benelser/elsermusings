@@ -17,7 +17,7 @@ using Amazon.DynamoDBv2.DataModel;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace emailservice
+namespace booking_startheband
 {
     public class Function
     {
@@ -28,9 +28,8 @@ namespace emailservice
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public bool FunctionHandler(SongRequest input, ILambdaContext context)
+        public bool FunctionHandler(BookingRequest input, ILambdaContext context)
         {
-            
             
             
             var assembly = Assembly.GetExecutingAssembly();
@@ -42,9 +41,13 @@ namespace emailservice
                 html.Append(reader.ReadToEnd());
                 
             }
-            html.Replace("{Title}", $"{input.Title}");
-            html.Replace("{Artist}", $"{input.Artist}");
-            html.Replace("{Name}", $"{input.Name}");
+            html.Replace("{Email}", $"{input.Email}");
+            html.Replace("{FirstName}", $"{input.FirstName}");
+            html.Replace("{LastName}", $"{input.LastName}");
+            html.Replace("{DesiredDate}", $"{input.DesiredDate}");
+            html.Replace("{PhoneNumber}", $"{input.PhoneNumber}");
+            html.Replace("{Message}", $"{input.Message}");
+
 
             Organization currentOrg = Organization.GetOrganization(input.OrgId);
     
@@ -57,11 +60,15 @@ namespace emailservice
 
             string[] recips = { currentOrg.Email };
             // string unsubscribeLink = currentContact.GetUnsubscribeLink(currentOrg);
+            
             // String BODY =
-            // "<h1>New Song Request</h1>" +
-            // $"<h2>Artist: {input.Artist}</h2>" +
-            // $"<h2>Song Title: {input.Title}</h2>";
-            EmailService es = new EmailService("noreply@myradiantsolution.com","Song Request Service", recips, "NEW SONG REQUEST", html.ToString());
+            // "<h1>New Booking Inquiry</h1>" +
+            // $"<h2>Name: {input.FirstName} {input.LastName}</h2>" +
+            // $"<h2>Desired Date: {input.DesiredDate}</h2>" +
+            // $"<h2>Email: {input.Email}</h2>" +
+            // $"<h2>Phone Number: {input.PhoneNumber}</h2>" +
+            // $"<p>Message: {input.Message}</p>" ;
+            EmailService es = new EmailService("noreply@myradiantsolution.com","Booking Service", recips, "New Booking Inquiry", html.ToString());
             System.Console.WriteLine(es);
             bool success = es.SendMessage();
             if (success == true)
@@ -76,21 +83,15 @@ namespace emailservice
         }
     }
 
-    public class SongRequest
+    public class BookingRequest
     {
-        public string Title { get; set; }
-        public string Artist { get; set; }
-        public string Name { get; set; }
-        public string OrgId { get; set; }
-    }
-
-    public class Requests
-    {
-        public string Topic { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string DesiredDate { get; set; }
         public string Message { get; set; }
         public string OrgId { get; set; }
-        
     }
 
     public class EmailService
@@ -209,55 +210,4 @@ namespace emailservice
         }
     }
 
-    [DynamoDBTable("contacts")]
-    public class Contact
-    {
-
-        [DynamoDBHashKey]
-        public string Email { get; set; }
-
-        [DynamoDBProperty("FirstName")]
-        public string FirstName { get; set; }
-        [DynamoDBProperty("LastName")]
-        public string LastName { get; set; }
-
-        [DynamoDBProperty("PhoneNumber")]
-        public string PhoneNumber { get; set; }
-        [DynamoDBProperty("GUID")]
-        public string GUID;
-        public string Message { get; set; }
-
-        private static async Task<Contact> GetContactData(Contact C)
-        {
-            var client = new AmazonDynamoDBClient();
-            DynamoDBContext dbcontext = new DynamoDBContext(client);
-            try
-            {
-                var result = await dbcontext.LoadAsync<Contact>(C.Email);
-                // this.Name = result;
-                // this.Domain = currentOrg.Domain;
-                Console.WriteLine($"Contact {result}"); 
-                return result;
-
-            }
-            catch (System.Exception)
-            {
-                Console.WriteLine("Exception thrown inside GetContactData");
-                return new Contact();
-            }
-        }
-
-        public static Contact GetContact(string email){
-            Contact C = new Contact();
-            C.Email = email;
-            var result = GetContactData(C);
-            result.Wait();
-            return result.Result;
-        }
-
-        public string GetUnsubscribeLink(Organization org)
-        {
-            return $"https://{org.Domain}/unsubscribe/{this.GUID}";
-        }
-    }
 }

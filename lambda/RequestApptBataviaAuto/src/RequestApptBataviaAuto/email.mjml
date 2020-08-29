@@ -1,0 +1,27 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-image width="450px" height="350px" src="https://images.pexels.com/photos/3807695/pexels-photo-3807695.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"></mj-image>
+
+        <mj-divider border-color="rgba(232, 232, 232, 1)"></mj-divider>
+        <mj-text font-size="18px" color="rgba(46, 49, 49, 1)" font-family="helvetica">New Appointment Request</mj-text>
+        <mj-divider border-color="rgba(232, 232, 232, 1)"></mj-divider>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">First Name: {FirstName}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Last Name: {LastName}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Email: {Email}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Phone: {PhoneNumber}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Desired Date: {DesiredDate}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Contact Method: {ContactMethod}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Appointment Type: {AppointmentType}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Year: {Year}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Make: {Make}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Model: {Model}</mj-text>
+        <mj-text font-size="14px" color="rgba(46, 49, 49, 1)" font-family="helvetica">Message: {Message}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+
+<!-- use command palette to compile down to raw html -->

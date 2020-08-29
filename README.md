@@ -100,7 +100,7 @@ export PATH="$PATH:/home/bjelser/.dotnet/tools"
 source ~/.bash_profile # update profile
 ```
 ```bash
-dotnet new lambda.EmptyFunction --name fetchweatherdata
+dotnet new lambda.EmptyFunction --name booking-startheband
 ```
 9. Create lambda role
 These roles are used to give AWS services internal access to each other. We need to create a role that we’ll assign to our Lambda functions. In production think least-privilaged.

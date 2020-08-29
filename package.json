@@ -1,0 +1,23 @@
+{
+  "name": "elsermusings",
+  "version": "1.0.0",
+  "description": "url: https://elsermusings.s3.amazonaws.com/index.html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benelser/elsermusings.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benelser/elsermusings/issues"
+  },
+  "homepage": "https://github.com/benelser/elsermusings#readme",
+  "dependencies": {
+    "mjml": "^4.6.3"
+  }
+}

@@ -26,22 +26,13 @@ namespace spotify
         public void FunctionHandler(ILambdaContext context)
         {
             
-            KeyValuePair<string, string> TokenHeader = GetSpotifyToken();
-            System.Console.WriteLine(TokenHeader.Value);
-            string artist = "Brooks & Dunn";
-            byte[] artistbytes = Encoding.ASCII.GetBytes(artist);
-            var artistencoded = HttpUtility.UrlEncode(artistbytes);
-            var url = new Uri($"https://api.spotify.com/v1/search?q={artistencoded}&type=artist");
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add(TokenHeader.Key, TokenHeader.Value);
-            HttpResponseMessage response = client.GetAsync(url).Result;
-            ArtistsResponse res = response.Content.ReadFromJsonAsync<ArtistsResponse>().Result;
-            foreach (Item a in res.artists.items)
+            var artists = GetArtists("Tupac");
+            foreach (var artist in artists)
             {
-                System.Console.WriteLine(a.name);
+                System.Console.WriteLine(artist.name);
             }
-            
-            
+  
+
         }
 
         public static KeyValuePair<string, string> GetSpotifyToken()
@@ -60,6 +51,20 @@ namespace spotify
             ResponseToken token = response.Content.ReadFromJsonAsync<ResponseToken>().Result;
             return new KeyValuePair<string, string>("Authorization", $"Bearer {token.Access_Token}");
         }
+
+        public static IList<Item> GetArtists(string artist)
+        {
+            KeyValuePair<string, string> TokenHeader = GetSpotifyToken();
+            byte[] artistbytes = Encoding.ASCII.GetBytes(artist);
+            var artistencoded = HttpUtility.UrlEncode(artistbytes);
+            var url = new Uri($"https://api.spotify.com/v1/search?q={artistencoded}&type=artist");
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Add(TokenHeader.Key, TokenHeader.Value);
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            ArtistsResponse res = response.Content.ReadFromJsonAsync<ArtistsResponse>().Result;
+            return res.artists.items;
+            
+        }
     }
 
     class ResponseToken
@@ -70,7 +75,7 @@ namespace spotify
         public string Scope { get; set; }
     }
 
-        public class ExternalUrls
+    public class ExternalUrls
     {
         public string spotify { get; set; }
     }
@@ -118,6 +123,7 @@ namespace spotify
         public Artists artists { get; set; }
     }
 
+    
 
 
 }

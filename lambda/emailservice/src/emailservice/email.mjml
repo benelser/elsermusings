@@ -1,0 +1,19 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+
+        <mj-image width="450px" height="150px" src="https://images.pexels.com/photos/2253569/pexels-photo-2253569.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"></mj-image>
+
+        <mj-divider border-color="#ffc071"></mj-divider>
+        <mj-text font-size="18px" color="#666665" font-family="helvetica">New Song Request!</mj-text>
+        <mj-divider border-color="#ffc071"></mj-divider>
+        <mj-text font-size="14px" color="#666665" font-family="helvetica">Title: {Title}</mj-text>
+        <mj-text font-size="14px" color="#666665" font-family="helvetica">Artist: {Artist}</mj-text>
+        <mj-text font-size="14px" color="#666665" font-family="helvetica">From: {Name}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+
+<!-- use command palette to compile down to raw html -->
